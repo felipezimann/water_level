@@ -472,13 +472,13 @@ def main():
     if "data_loaded" not in st.session_state:
         st.session_state.data_loaded = False
 
-    if st.button("Force Update", icon="🔄", type="primary"):
-        # ReadDataGoogleSheets().clear() # clear func cache only
-        # ReadDataFirebase.clear() # clear func cache only
-        st.cache_data.clear()  # clear cache
-        st.session_state.data_loaded = False
-        # You can clear a function's cache with func.clear() or
-        # clear the entire cache with st.cache_data.clear().
+    # if st.button("Force Update", icon="🔄", type="primary"):
+    #     # ReadDataGoogleSheets().clear() # clear func cache only
+    #     # ReadDataFirebase.clear() # clear func cache only
+    #     st.cache_data.clear()  # clear cache
+    #     st.session_state.data_loaded = False
+    #     # You can clear a function's cache with func.clear() or
+    #     # clear the entire cache with st.cache_data.clear().
 
     _ = """
     # Verificar se os dados estão carregados
