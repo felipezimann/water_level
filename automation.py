@@ -1,5 +1,5 @@
 import os.path
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import json
 import pandas as pd
 import streamlit as st
@@ -18,36 +18,36 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # Carregar variáveis do .env
-load_dotenv()
+# load_dotenv()
 
 # Gerar o conteúdo do JSON a partir das variáveis de ambiente para o Google Sheets
 gs_credentials_data = {
     "installed": {
-        "client_id": os.getenv("GOOGLE_CLIENT_ID"),
-        "project_id": os.getenv("GOOGLE_PROJECT_ID"),
-        "auth_uri": os.getenv("GOOGLE_AUTH_URI"),
-        "token_uri": os.getenv("GOOGLE_TOKEN_URI"),
-        "auth_provider_x509_cert_url": os.getenv("GOOGLE_AUTH_PROVIDER_CERT_URL"),
-        "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"),
+        "client_id": st.secrets["GOOGLE_CLIENT_ID"],
+        "project_id": st.secrets["GOOGLE_PROJECT_ID"],
+        "auth_uri": st.secrets["GOOGLE_AUTH_URI"],
+        "token_uri": st.secrets["GOOGLE_TOKEN_URI"],
+        "auth_provider_x509_cert_url": st.secrets["GOOGLE_AUTH_PROVIDER_CERT_URL"],
+        "client_secret": st.secrets["GOOGLE_CLIENT_SECRET"],
         "redirect_uris": [
-            os.getenv("GOOGLE_REDIRECT_URI")
+            st.secrets["GOOGLE_REDIRECT_URI"]
         ]
     }
 }
 
 # Gerar o conteúdo do JSON para o Firebase
 firebase_config = {
-    "type": os.getenv("FIREBASE_TYPE"),
-    "project_id": os.getenv("FIREBASE_PROJECT_ID"),
-    "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
+    "type": st.secrets["FIREBASE_TYPE"],
+    "project_id": st.secrets["FIREBASE_PROJECT_ID"],
+    "private_key_id": st.secrets["FIREBASE_PRIVATE_KEY_ID"],
     # Corrigir quebras de linha
-    "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
-    "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
-    "client_id": os.getenv("FIREBASE_CLIENT_ID"),
-    "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
-    "token_uri": os.getenv("FIREBASE_TOKEN_URI"),
-    "auth_provider_x509_cert_url": os.getenv("FIREBASE_AUTH_PROVIDER_CERT_URL"),
-    "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_CERT_URL")
+    "private_key": st.secrets["FIREBASE_PRIVATE_KEY"].replace("\\n", "\n"),
+    "client_email": st.secrets["FIREBASE_CLIENT_EMAIL"],
+    "client_id": st.secrets["FIREBASE_CLIENT_ID"],
+    "auth_uri": st.secrets["FIREBASE_AUTH_URI"],
+    "token_uri": st.secrets["FIREBASE_TOKEN_URI"],
+    "auth_provider_x509_cert_url": st.secrets["FIREBASE_AUTH_PROVIDER_CERT_URL"],
+    "client_x509_cert_url": st.secrets["FIREBASE_CLIENT_CERT_URL"]
 }
 
 # Escrever o JSON em um arquivo temporário
@@ -55,13 +55,13 @@ with open("firebase_credentials_temp.json", "w") as f:
     json.dump(firebase_config, f)
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = [os.getenv("GOOGLE_SCOPES")]
+SCOPES = [st.secrets["GOOGLE_SCOPES"]]
 
 # The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = os.getenv("GOOGLE_SPREADSHEET_ID")
-SHEET_ID = os.getenv("GOOGLE_SHEET_ID")
-RANGE_NAME = os.getenv("GOOGLE_RANGE_NAME")
-RANGE_NAME2 = os.getenv("GOOGLE_RANGE_NAME2")
+SPREADSHEET_ID = st.secrets["GOOGLE_SPREADSHEET_ID"]
+SHEET_ID = st.secrets["GOOGLE_SHEET_ID"]
+RANGE_NAME = st.secrets["GOOGLE_RANGE_NAME"]
+RANGE_NAME2 = st.secrets["GOOGLE_RANGE_NAME2"]
 
 
 @st.cache_data(ttl=300)  # 5min
@@ -180,7 +180,7 @@ def ReadDataFirebase():
 
     # Carregar credenciais do Firebase
     cred = credentials.Certificate("firebase_credentials_temp.json")
-    databaseURL_firebase = os.getenv("FIREBASE_DATABASE_URL")
+    databaseURL_firebase = st.secrets["FIREBASE_DATABASE_URL"]
 
     app = firebase_admin.initialize_app(
         cred, {"databaseURL": databaseURL_firebase}, name='app_water')
