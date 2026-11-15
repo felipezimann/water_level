@@ -321,6 +321,17 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
         line_color="green",
         line_width=1.5,
         line_dash="dash",
+        row=2,  # pyright: ignore[reportArgumentType]
+        col=1,  # pyright: ignore[reportArgumentType]
+    )
+    # Linhas de referência
+    fig_filtered.add_hline(
+        y=500,
+        line_color="orange",
+        line_width=1.5,
+        line_dash="dash",
+        row=2,  # pyright: ignore[reportArgumentType]
+        col=1,  # pyright: ignore[reportArgumentType]
     )
 
     # Eixo Y invertido
