@@ -1082,7 +1082,7 @@ def main():
 
         start_func_fire = time()
 
-        df_firebase = ReadDataFirebase("water_level/log_data")
+        df_firebase = ReadDataFirebase("water_level/esp32_rain_water/log_data")
 
         df_firebase_esp8266 = ReadDataFirebase(
             "water_level/ESP8266_data/data_log"
@@ -1422,13 +1422,6 @@ def main():
             st.dataframe(df_firebase_esp8266_raw.sort_values(by="timestamp",
                          ascending=False), hide_index=True, width=1500, height=500)
 
-            st.write(df_firebase_raw["timestamp"].dtype)
-
-            st.write(
-                df_firebase_raw.sort_values(
-                    "timestamp", ascending=False
-                )["timestamp"].head(10)
-            )
         with col2a:
             st.plotly_chart(fig_8266_raw, theme=None, width='stretch')
 
