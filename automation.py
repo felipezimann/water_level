@@ -1343,7 +1343,7 @@ def main():
             # gráfico novo com subplots
             # ============
             st.plotly_chart(fig_filtered, theme=None, width='stretch', config={
-                "responsive": False,
+                "responsive": True,
                 "displayModeBar": True,
                 "scrollZoom": False,
                 "displaylogo": False,
@@ -1418,7 +1418,7 @@ def main():
         col1a, col2a = st.columns(2)
 
         with col1a:
-            st.dataframe(df_firebase_esp8266, width=1500, height=500)
+            st.dataframe(df_firebase_esp8266_raw, width=1500, height=500)
         with col2a:
             st.plotly_chart(fig_8266_raw, theme=None, width='stretch')
 
