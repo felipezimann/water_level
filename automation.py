@@ -1344,17 +1344,17 @@ def main():
             # fig_filtered.write_image("fig1.png")
 
             # Gerar PNG em alta resolução
-            img_bytes = fig_filtered.to_image(
-                format="png",
-                scale=3  # aumenta a resolução em 3x
-            )
+            # img_bytes = fig_filtered.to_image(
+            #     format="png",
+            #     scale=3  # aumenta a resolução em 3x
+            # )
 
-            st.download_button(
-                label="📥 Download gráfico em PNG",
-                data=img_bytes,
-                file_name="grafico_caixa_dagua.png",
-                mime="image/png",
-            )
+            # st.download_button(
+            #     label="📥 Download gráfico em PNG",
+            #     data=img_bytes,
+            #     file_name="grafico_caixa_dagua.png",
+            #     mime="image/png",
+            # )
 
             # st.plotly_chart(fig_filtered, theme=None, width='stretch')
 
