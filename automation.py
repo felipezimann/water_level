@@ -29,6 +29,10 @@ firebase_config = {
     "client_x509_cert_url": st.secrets["FIREBASE_CLIENT_CERT_URL"]
 }
 
+# Escrever o JSON em um arquivo temporário
+with open("firebase_credentials_temp.json", "w") as f:
+    json.dump(firebase_config, f)
+
 
 @st.cache_data(ttl=300)  # 5min
 def ReadDataFirebase(sensor_path):
