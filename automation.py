@@ -1390,7 +1390,8 @@ def main():
 
         with col1a:
             # Plota df esp32 raw
-            st.dataframe(df_firebase_raw, width=1500, height=500)
+            st.dataframe(df_firebase_raw.sort_values(by="timestamp", ascending=False),
+                         hide_index=True, width=1500, height=500)
         with col2a:
             # plota dados filtrados com mmCounter
             # fig_fire = px.line(
@@ -1418,7 +1419,16 @@ def main():
         col1a, col2a = st.columns(2)
 
         with col1a:
-            st.dataframe(df_firebase_esp8266_raw, width=1500, height=500)
+            st.dataframe(df_firebase_esp8266_raw.sort_values(by="timestamp",
+                         ascending=False), hide_index=True, width=1500, height=500)
+
+            st.write(df_firebase_raw["timestamp"].dtype)
+
+            st.write(
+                df_firebase_raw.sort_values(
+                    "timestamp", ascending=False
+                )["timestamp"].head(10)
+            )
         with col2a:
             st.plotly_chart(fig_8266_raw, theme=None, width='stretch')
 
