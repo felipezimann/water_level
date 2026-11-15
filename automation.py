@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 from time import time
 from typing import Any, cast
 from plotly.subplots import make_subplots
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import firebase_admin
 from firebase_admin import credentials, db
@@ -28,6 +30,8 @@ firebase_config = {
     "auth_provider_x509_cert_url": st.secrets["FIREBASE_AUTH_PROVIDER_CERT_URL"],
     "client_x509_cert_url": st.secrets["FIREBASE_CLIENT_CERT_URL"]
 }
+
+TZ_BR = ZoneInfo("America/Sao_Paulo")
 
 # Escrever o JSON em um arquivo temporário
 with open("firebase_credentials_temp.json", "w") as f:
@@ -75,7 +79,7 @@ def ReadDataFirebase(sensor_path):
     # received_data = ref.order_by_key().limit_to_last(num_records).get()
 
     timestamp_inicio = datetime(2026, 10, 4)
-    timestamp_fim = datetime.now()
+    timestamp_fim = datetime.now(TZ_BR).replace(tzinfo=None)
 
     timestamp_inicio = timestamp_inicio.strftime("%Y-%m-%d %H:%M:%S")
     timestamp_fim = timestamp_fim.strftime("%Y-%m-%d %H:%M:%S")
@@ -155,7 +159,7 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
 
     # Linha vertical indicando o horário atual
 
-    agora = datetime.now()
+    agora = datetime.now(TZ_BR).replace(tzinfo=None)
 
     fig_filtered.add_vline(
         x=agora,
@@ -302,7 +306,7 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
     )
     # Linha vertical indicando o horário atual
 
-    agora2 = datetime.now()
+    agora2 = datetime.now(TZ_BR).replace(tzinfo=None)
 
     fig_filtered.add_vline(
         x=agora2,
@@ -858,7 +862,7 @@ def CreateFigDataRaw(df_raw):
 
     # Linha vertical indicando o horário atual
 
-    agora = datetime.now()
+    agora = datetime.now(TZ_BR).replace(tzinfo=None)
 
     fig.add_vline(
         x=agora,
@@ -1119,7 +1123,7 @@ def main():
                                               (df_firebase_esp8266['timestamp'] > data)]
 
     first_date = df_firebase['timestamp'].iloc[0]
-    last_date = datetime.now()
+    last_date = datetime.now(TZ_BR).replace(tzinfo=None)
     # last_date = df_firebase['timestamp'].iloc[-1]
 
     # first_date = df_filtered['Date'].iloc[0]
@@ -1246,7 +1250,7 @@ def main():
                           value=f'{last_humd:.1f}%'.replace(".", ","), border=True)
 
                 last_date = df_firebase["timestamp"].iloc[-1]
-                delta = datetime.now() - last_date
+                delta = datetime.now(TZ_BR).replace(tzinfo=None) - last_date
                 if delta <= timedelta(minutes=10):
                     delta_cor = "green"
                 else:
@@ -1280,7 +1284,7 @@ def main():
                           value=f'{last_humd:.1f}%'.replace(".", ","), border=True)
 
                 last_date = df_firebase_esp8266["timestamp"].iloc[-1]
-                delta = datetime.now() - last_date
+                delta = datetime.now(TZ_BR).replace(tzinfo=None) - last_date
                 if delta <= timedelta(minutes=10):
                     delta_cor = "green"
                 else:
