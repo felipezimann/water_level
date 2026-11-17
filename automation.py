@@ -298,7 +298,7 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
             line=dict(
                 shape="hv",
                 color="red",
-                width=1,
+                width=2,
             ),
         ),
         row=2,
@@ -317,7 +317,7 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
 
     # Linhas de referência
     fig_filtered.add_hline(
-        y=300,
+        y=380,
         line_color="green",
         line_width=1.5,
         line_dash="dash",
@@ -326,7 +326,7 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
     )
     # Linhas de referência
     fig_filtered.add_hline(
-        y=500,
+        y=460,
         line_color="orange",
         line_width=1.5,
         line_dash="dash",
