@@ -77,11 +77,11 @@ SENSORES: dict[str, dict[str, Any]] = {
         "cor_temp": "blue",
         "cor_humi": "purple",
         "refs": [
-            {"y": 360, "cor": "green", "largura": 1.5, "opacidade": 1},
+            {"y": 360, "cor": "green", "largura": 1.5, "opacidade": 0.75},
             {"y": 650, "cor": "green", "largura": 1, "opacidade": 0.75},
             {"y": 780, "cor": "orange", "largura": 1.5, "opacidade": 0.75},
-            {"y": 850, "cor": "salmon", "largura": 1.5, "opacidade": 1},
-            {"y": 1000, "cor": "red", "largura": 1.5, "opacidade": 1},
+            {"y": 850, "cor": "salmon", "largura": 1.5, "opacidade": 0.75},
+            {"y": 1000, "cor": "red", "largura": 1.5, "opacidade": 0.75},
         ],
         # (texto, posição "first"/"last", y)
         "anotacoes": [
@@ -105,6 +105,10 @@ SENSORES: dict[str, dict[str, Any]] = {
         "refs": [
             {"y": 380, "cor": "green", "largura": 1.5, "opacidade": 1},
             {"y": 580, "cor": "orange", "largura": 1.5, "opacidade": 1},
+        ],
+        # Áreas sombreadas entre dois níveis (y0 e y1, em mm)
+        "faixas": [
+            {"y0": 600, "y1": 680, "cor": "orange", "opacidade": 0.05},
         ],
         "anotacoes": [],
     },
@@ -333,6 +337,18 @@ def criar_fig_dados(
                 col=1,  # pyright: ignore[reportArgumentType]
             )
 
+        for faixa in cfg.get("faixas", []):
+            fig.add_hrect(
+                y0=faixa["y0"],
+                y1=faixa["y1"],
+                fillcolor=faixa["cor"],
+                opacity=faixa["opacidade"],
+                line_width=0,
+                layer="below",
+                row=i,  # pyright: ignore[reportArgumentType]
+                col=1,  # pyright: ignore[reportArgumentType]
+            )
+
         if not df.empty:
             for texto, posicao, y in cfg["anotacoes"]:
                 x = df["timestamp"].iloc[0 if posicao == "first" else -1]
@@ -351,7 +367,7 @@ def criar_fig_dados(
                 x=df["timestamp"],
                 y=df["tempC"],
                 mode="lines",
-                line=dict(width=1.5, color=cfg["cor_temp"]),
+                line=dict(width=1.0, color=cfg["cor_temp"]),
                 name=f"Temp. {cfg['nome']}",
             ),
             row=linha_temp,
