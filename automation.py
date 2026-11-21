@@ -315,7 +315,7 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
         line_dash="dash",
     )
 
-    # Linhas de referência
+    # Linhas de referência MAXIMO
     fig_filtered.add_hline(
         y=380,
         line_color="green",
@@ -324,16 +324,40 @@ def CreateFigDataFiltered(df_firebase, df_firebase_esp8266):
         row=2,  # pyright: ignore[reportArgumentType]
         col=1,  # pyright: ignore[reportArgumentType]
     )
-    # Linhas de referência
+    # area de tolerancia MAXIMO
+    fig_filtered.add_hrect(
+        y0=370,
+        y1=390,
+        fillcolor="green",
+        opacity=0.05,
+        line_width=0,
+        layer="below",
+        row=2,  # pyright: ignore[reportArgumentType]
+        col=1,  # pyright: ignore[reportArgumentType]
+    )
+
+    # Linhas de referência MINIMA
     fig_filtered.add_hline(
-        y=620,
+        y=640,
         line_color="orange",
         line_width=1.5,
         line_dash="dash",
         row=2,  # pyright: ignore[reportArgumentType]
         col=1,  # pyright: ignore[reportArgumentType]
     )
-    # Linhas de referência
+    # area de tolerancia MINIMA
+    fig_filtered.add_hrect(
+        y0=680,
+        y1=600,
+        fillcolor="orange",
+        opacity=0.05,
+        line_width=0,
+        layer="below",
+        row=2,  # pyright: ignore[reportArgumentType]
+        col=1,  # pyright: ignore[reportArgumentType]
+    )
+
+    # Linhas de referência VAZIA
     fig_filtered.add_hline(
         y=2000,
         line_color="red",
@@ -1051,7 +1075,7 @@ def main():
 
     st.set_page_config(
         page_title="Automação Caixas D'água",
-        page_icon=None,
+        page_icon=":umbrella:",
         layout="wide",
         initial_sidebar_state="collapsed"
     )
