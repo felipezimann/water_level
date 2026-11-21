@@ -18,7 +18,7 @@ import os
 import threading
 from datetime import datetime, timedelta
 from time import time
-from typing import Any
+from typing import Any, cast
 from zoneinfo import ZoneInfo
 
 import firebase_admin
@@ -103,13 +103,16 @@ SENSORES: dict[str, dict[str, Any]] = {
         "cor_temp": "steelblue",
         "cor_humi": "salmon",
         "refs": [
-            {"y": 380, "cor": "green", "largura": 1.5, "opacidade": 1},
-            {"y": 580, "cor": "orange", "largura": 1.5, "opacidade": 1},
+            {"y": 420, "cor": "green", "largura": 1.0, "opacidade": 1},
+            {"y": 640, "cor": "orange", "largura": 1.0, "opacidade": 1},
         ],
         # Áreas sombreadas entre dois níveis (y0 e y1, em mm)
         "faixas": [
             {"y0": 600, "y1": 680, "cor": "orange", "opacidade": 0.05},
+            {"y0": 410, "y1": 430, "cor": "green", "opacidade": 0.05},
         ],
+        # Limite mínimo (mm): só é desenhado quando o checkbox está marcado
+        "limite_minimo": 2000,
         "anotacoes": [],
     },
     "esp32_s3": {
@@ -284,9 +287,7 @@ def limpar(df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFrame:
 # ============================================================
 
 
-def criar_fig_dados(
-    dfs: dict[str, pd.DataFrame], mostrar_media: bool
-) -> go.Figure:
+def criar_fig_dados(dfs: dict[str, pd.DataFrame], mostrar_media: bool, mostrar_limite: bool = False,) -> go.Figure:
     """Uma linha de distância por sensor ativo + temperatura + umidade."""
     ativos = [(k, SENSORES[k]) for k in dfs]
     n_dist = len(ativos)
@@ -355,6 +356,17 @@ def criar_fig_dados(
                 fig.add_annotation(
                     text=texto, x=x, y=y, showarrow=False, row=i, col=1
                 )
+        if mostrar_limite and cfg.get("limite_minimo") is not None:
+            fig.add_hline(
+                y=cfg["limite_minimo"],
+                line_color="red",
+                line_width=1.5,
+                line_dash="dash",
+                annotation_text="Limite mínimo",
+                annotation_position="top left",
+                row=i,  # pyright: ignore[reportArgumentType]
+                col=1,  # pyright: ignore[reportArgumentType]
+            )
 
         fig.update_yaxes(
             title_text="Distância (mm)", autorange="reversed", row=i, col=1
@@ -646,7 +658,7 @@ def painel() -> None:
     else:
         st.markdown(f"Você selecionou os últimos: {selecao}.")
 
-    start_date, end_date = st.slider(
+    intervalo = st.slider(
         "Filtro de datas:",
         min_value=min_dt,
         max_value=max_dt,
@@ -654,14 +666,18 @@ def painel() -> None:
         step=timedelta(days=1),
         key="slider_datas",
     )
+    start_date, end_date = cast(tuple[datetime, datetime], intervalo)
 
     mostrar_media = st.checkbox("Mostrar Média", value=False, key="show_mean")
+    mostrar_limite = st.checkbox(
+        "Mostrar limite mínimo da cisterna", value=False, key="show_limit"
+    )
 
     filtrados = {
         k: df[(df["timestamp"] >= start_date) & (df["timestamp"] <= end_date)]
         for k, df in validos.items()
     }
-    fig_dados = criar_fig_dados(filtrados, mostrar_media)
+    fig_dados = criar_fig_dados(filtrados, mostrar_media, mostrar_limite)
 
     # ---- Abas ----
     abas = st.tabs(
